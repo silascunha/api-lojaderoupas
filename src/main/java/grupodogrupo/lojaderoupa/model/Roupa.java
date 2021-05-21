@@ -1,12 +1,14 @@
 package grupodogrupo.lojaderoupa.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import grupodogrupo.lojaderoupa.model.enums.Genero;
+import grupodogrupo.lojaderoupa.model.enums.TipoTamanho;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Entity
 public class Roupa implements Serializable {
@@ -16,7 +18,12 @@ public class Roupa implements Serializable {
     private Long id;
     private String descricao;
     private Double preco;
-    private Boolean ativo;
+    private Boolean ativo = false;
+
+    private int tipoTamanho;
+
+    @Enumerated(EnumType.STRING)
+    private Genero genero;
 
     @ManyToMany
     @JoinTable(
@@ -29,6 +36,7 @@ public class Roupa implements Serializable {
     private Instant dataCadastro;
 
     @OneToMany(mappedBy = "roupa", cascade = CascadeType.ALL)
+    @OrderBy("id ASC")
     private Set<Modelo> modelos = new HashSet<>();
 
     public Roupa() {
@@ -47,7 +55,6 @@ public class Roupa implements Serializable {
         this.descricao = descricao;
         this.dataCadastro = dataCadastro;
         this.preco = preco;
-        this.ativo = true;
     }
 
     public Long getId() {
@@ -90,6 +97,24 @@ public class Roupa implements Serializable {
         this.ativo = ativo;
     }
 
+    public TipoTamanho getTipoTamanho() {
+        return TipoTamanho.valueOf(this.tipoTamanho);
+    }
+
+    public void setTipoTamanho(TipoTamanho tipoTamanho) {
+        if (tipoTamanho != null) {
+            this.tipoTamanho = tipoTamanho.getCodigo();
+        }
+    }
+
+    public Genero getGenero() {
+        return this.genero;
+    }
+
+    public void setGenero(Genero genero) {
+        this.genero = genero;
+    }
+
     public Set<Categoria> getCategorias() {
         return categorias;
     }
@@ -99,8 +124,12 @@ public class Roupa implements Serializable {
     }
 
     public Integer getQuantidadeTotal() {
-        return modelos.stream()
-                .reduce(0, (total, modelo) -> total + modelo.getQuantidade(), Integer::sum);
+        Integer quantidadeTotal = 0;
+        for (Modelo modelo : modelos) {
+            quantidadeTotal += modelo.getQuantidadeTotal();
+        }
+
+        return quantidadeTotal;
     }
 
     public Set<Modelo> getModelos() {
@@ -108,42 +137,44 @@ public class Roupa implements Serializable {
     }
 
     public void setModelos(Set<Modelo> modelos) {
-        modelos.forEach(x -> x.setRoupa(this));
+        modelos.forEach(x -> {
+            boolean temTamanhoInvalido = !ListaTamanho.getTamanhos(this.getTipoTamanho())
+                    .containsAll(x.getTamanhos());
+
+            if (temTamanhoInvalido) {
+                throw new IllegalArgumentException("Tamanho inválido com o tipo selecionado");
+            }
+
+            x.setRoupa(this);
+        });
         this.modelos = modelos;
     }
 
-    public Set<Tamanho> getTamanhos() {
-        return modelos.stream().map(el -> el.getTamanho()).collect(Collectors.toSet());
-    }
+    @JsonIgnore
+    public List<Imagem> getImagens() {
+        List<Imagem> imagens = new ArrayList<>();
 
-    public Set<Cor> getCores() {
-        return modelos.stream().map(el -> el.getCor()).collect(Collectors.toSet());
+        modelos.forEach(modelo -> imagens.addAll(modelo.getImagens()));
+
+        return imagens;
     }
 
     public boolean addModelo(Modelo modelo) {
-        boolean adicionado = modelos.add(modelo);
+        boolean temTamanhoInvalido = !ListaTamanho.getTamanhos(this.getTipoTamanho())
+                .containsAll(modelo.getTamanhos());
+
+        if (temTamanhoInvalido) {
+            throw new IllegalArgumentException("Tamanho inválido com o tipo selecionado");
+        }
+
         modelo.setRoupa(this);
-        return adicionado;
+        return modelos.add(modelo);
     }
 
     public boolean removeModelo(Modelo modelo) {
         boolean removido = modelos.remove(modelo);
         modelo.setRoupa(null);
         return removido;
-    }
-
-    public Map<String, List<Modelo>> getModelosPorCores() {
-        Map<String, List<Modelo>> listaModelosPorCor = new HashMap<>();
-
-        getCores().forEach(cor -> {
-            List<Modelo> modelos = this.modelos.stream()
-                    .filter(modelo -> modelo.getCor().equals(cor))
-                    .collect(Collectors.toList());
-
-            listaModelosPorCor.put(cor.getNome(), modelos);
-        });
-
-        return listaModelosPorCor;
     }
 
     @Override

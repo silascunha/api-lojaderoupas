@@ -4,7 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 public class Modelo implements Serializable {
@@ -13,25 +14,23 @@ public class Modelo implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Tamanho tamanho;
-
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "cor_id")
     private Cor cor;
 
-    private Integer quantidade;
+    @OneToMany(mappedBy = "modelo", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("id ASC")
+    private List<TamanhoModelo> tamanhosModelo = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     private Roupa roupa;
 
-    public Modelo() {
-    }
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "modelo_id")
+    private List<Imagem> imagens = new ArrayList<>();
 
-    public Modelo(Tamanho tamanho, Cor cor, Integer quantidade) {
-        this.tamanho = tamanho;
-        this.cor = cor;
-        this.quantidade = quantidade;
+    public Modelo() {
     }
 
     public Long getId() {
@@ -42,31 +41,6 @@ public class Modelo implements Serializable {
         this.id = id;
     }
 
-    public Tamanho getTamanho() {
-        return tamanho;
-    }
-
-    public void setTamanho(Tamanho tamanho) {
-        this.tamanho = tamanho;
-    }
-
-    public Cor getCor() {
-        return cor;
-    }
-
-    public void setCor(Cor cor) {
-        this.cor = cor;
-        cor.getModelos().add(this);
-    }
-
-    public Integer getQuantidade() {
-        return quantidade;
-    }
-
-    public void setQuantidade(Integer quantidade) {
-        this.quantidade = quantidade;
-    }
-
     public Roupa getRoupa() {
         return roupa;
     }
@@ -75,27 +49,71 @@ public class Modelo implements Serializable {
         this.roupa = roupa;
     }
 
+    public List<TamanhoModelo> getTamanhosModelo() {
+        return tamanhosModelo;
+    }
+
+    public void setTamanhosModelo(List<TamanhoModelo> tamanhosModelo) {
+        tamanhosModelo.forEach(x -> {
+            x.setModelo(this);
+        });
+        this.tamanhosModelo = tamanhosModelo;
+    }
+
+    public boolean addTamanhoModelo(TamanhoModelo obj) {
+        obj.setModelo(this);
+        return this.tamanhosModelo.add(obj);
+    }
+
+    public boolean removeTamanhoModelo(TamanhoModelo obj) {
+        obj.setModelo(null);
+        return this.tamanhosModelo.remove(obj);
+    }
+
+    public Cor getCor() {
+        return cor;
+    }
+
+    public void setCor(Cor cor) {
+        this.cor = cor;
+    }
+
+    @JsonIgnore
+    public Integer getQuantidadeTotal() {
+        Integer quantidadeTotal = 0;
+
+        for (TamanhoModelo elemento : tamanhosModelo) {
+            quantidadeTotal += elemento.getQuantidade();
+        }
+
+        return quantidadeTotal;
+    }
+
+    @JsonIgnore
+    public List<String> getTamanhos() {
+        return this.tamanhosModelo.stream()
+                .map(TamanhoModelo::getTamanho)
+                .collect(Collectors.toList());
+    }
+
+    public List<Imagem> getImagens() {
+        return imagens;
+    }
+
+    public void setImagens(List<Imagem> imagens) {
+        this.imagens = imagens;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Modelo modelo = (Modelo) o;
-        return Objects.equals(tamanho, modelo.tamanho) && Objects.equals(cor, modelo.cor);
+        return Objects.equals(cor, modelo.cor) && Objects.equals(roupa, modelo.roupa);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(tamanho, cor);
-    }
-
-    @Override
-    public String toString() {
-        return "Modelo{" +
-                "id=" + id +
-                ", tamanho='" + tamanho + '\'' +
-                ", cor='" + cor + '\'' +
-                ", quantidade=" + quantidade +
-                ", roupa=" + roupa +
-                '}';
+        return Objects.hash(cor, roupa);
     }
 }

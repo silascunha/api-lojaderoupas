@@ -23,6 +23,10 @@ public class Categoria implements Serializable {
     public Categoria() {
     }
 
+    public Categoria(Long id) {
+        this.id = id;
+    }
+
     public Categoria(Long id, String nome) {
         this.id = id;
         this.nome = nome;

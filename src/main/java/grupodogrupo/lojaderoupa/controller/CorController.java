@@ -1,10 +1,8 @@
 package grupodogrupo.lojaderoupa.controller;
 
 import grupodogrupo.lojaderoupa.dto.CreatedResponseDTO;
-import grupodogrupo.lojaderoupa.model.Categoria;
-import grupodogrupo.lojaderoupa.model.Roupa;
-import grupodogrupo.lojaderoupa.repository.CategoriaRepository;
-import grupodogrupo.lojaderoupa.service.CategoriaService;
+import grupodogrupo.lojaderoupa.model.Cor;
+import grupodogrupo.lojaderoupa.service.CorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,35 +16,28 @@ import java.util.Set;
 
 @RestController
 @CrossOrigin
-@RequestMapping(value = "/api/categorias")
-public class CategoriaController {
+@RequestMapping(value = "/api/cores")
+public class CorController {
 
     @Autowired
-    private CategoriaService categoriaService;
+    private CorService corService;
 
     @GetMapping
-    public ResponseEntity<List<Categoria>> getAll() {
-        List<Categoria> lista = categoriaService.getAll();
+    public ResponseEntity<List<Cor>> getAll() {
+        List<Cor> lista = corService.getAll();
 
         return ResponseEntity.ok().body(lista);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Categoria> getById(@PathVariable Long id) {
-        Categoria obj = categoriaService.getById(id);
+    public ResponseEntity<Cor> getById(@PathVariable Long id) {
+        Cor obj = corService.getById(id);
         return ResponseEntity.ok().body(obj);
     }
 
-    @GetMapping(value = "/{id}/roupas")
-    public ResponseEntity<Set<Roupa>> getRoupasDaCategoria(@PathVariable Long id) {
-        Set<Roupa> set = categoriaService.getRoupasDaCategoria(id);
-
-        return ResponseEntity.ok().body(set);
-    }
-
     @PostMapping
-    public ResponseEntity<Categoria> insert(@RequestBody Categoria obj) {
-        obj = categoriaService.insert(obj);
+    public ResponseEntity<Cor> insert(@RequestBody Cor obj) {
+        obj = corService.insert(obj);
 
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -58,28 +49,28 @@ public class CategoriaController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Categoria> update(@PathVariable Long id, @RequestBody Categoria obj) {
-        obj = categoriaService.update(id, obj);
+    public ResponseEntity<Cor> update(@PathVariable Long id, @RequestBody Cor obj) {
+        obj = corService.update(id, obj);
 
         return ResponseEntity.ok().body(obj);
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        categoriaService.delete(id);
+        corService.delete(id);
 
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping(value = "/enviarLista")
-    public ResponseEntity<List<CreatedResponseDTO>> insertLista(@RequestBody List<Categoria> lista) throws MalformedURLException {
+    public ResponseEntity<List<CreatedResponseDTO>> insertLista(@RequestBody List<Cor> lista) throws MalformedURLException {
         List<CreatedResponseDTO> responseDTOList = new ArrayList<>();
 
         lista.forEach(el -> {
-            Categoria obj = categoriaService.insert(el);
+            Cor obj = corService.insert(el);
 
             URI uri = ServletUriComponentsBuilder
-                    .fromPath("/api/categorias")
+                    .fromPath("/api/cores")
                     .path("/{id}")
                     .buildAndExpand(obj.getId())
                     .toUri();

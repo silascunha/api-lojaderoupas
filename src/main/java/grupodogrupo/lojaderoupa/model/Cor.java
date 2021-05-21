@@ -15,10 +15,26 @@ public class Cor implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
+
+    @Column(length = 12)
     private String valor;
 
-    @OneToMany(mappedBy = "cor", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "cor", fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<Modelo> modelos = new HashSet<>();
+
+    public Cor() {
+    }
+
+    public Cor(Long id) {
+        this.id = id;
+    }
+
+    public Cor(Long id, String nome, String valor) {
+        this.id = id;
+        this.nome = nome;
+        this.valor = valor;
+    }
 
     public Long getId() {
         return id;
@@ -63,5 +79,10 @@ public class Cor implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return nome;
     }
 }
