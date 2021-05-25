@@ -17,7 +17,7 @@ public class Categoria implements Serializable {
     private String nome;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "categorias", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "categoria", fetch = FetchType.LAZY)
     private Set<Roupa> roupas = new HashSet<>();
 
     public Categoria() {

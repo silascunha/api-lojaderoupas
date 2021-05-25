@@ -34,7 +34,7 @@ public class RoupaService {
     public Roupa insert(Roupa roupa) {
         try {
             roupa.setDataCadastro(Instant.now());
-            //saveImagens(roupa);
+
             return repository.save(roupa);
         } catch (DataIntegrityViolationException e) {
             e.printStackTrace();
@@ -62,14 +62,22 @@ public class RoupaService {
         return lista;
     }
 
-    public Page<Roupa> getFiltrados(Pageable pageable, String descricao, List<Long> coresId, List<Long> categoriasId, String genero, List<String> tamanhos){
+    public Page<Roupa> getFiltrados(
+            Pageable pageable,
+            String descricao,
+            List<Long> coresId,
+            List<Long> categoriasId,
+            String genero,
+            List<String> tamanhos,
+            Boolean ativo)
+    {
         List<Roupa> roupas;
         if (coresId == null && categoriasId == null && tamanhos == null && genero == null) {
-            roupas = repository.findByDescricao(descricao, null);
+            roupas = repository.findByDescricao(descricao, ativo);
         }
         else {
             Genero generoFiltro = (genero != null) ? Genero.valueOf(genero) : null;
-            roupas = repository.buscarFiltrado(descricao, coresId, categoriasId, generoFiltro, tamanhos);
+            roupas = repository.buscarFiltrado(descricao, coresId, categoriasId, generoFiltro, tamanhos, ativo);
         }
 
         return new PageImpl<>(roupas, pageable, roupas.size());
@@ -103,7 +111,7 @@ public class RoupaService {
     }
 
     private void updateData(Roupa objAntigo, Roupa objNovo) {
-        objAntigo.setCategorias(objNovo.getCategorias());
+        objAntigo.setCategoria(objNovo.getCategoria());
         objAntigo.setDescricao(objNovo.getDescricao());
         objAntigo.setPreco(objNovo.getPreco());
         objAntigo.setAtivo(objNovo.getAtivo());

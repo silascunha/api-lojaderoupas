@@ -54,10 +54,11 @@ public class RoupaController {
                 @RequestParam(value = "filtro_cor", required = false) List<Long> coresId,
                 @RequestParam(value = "filtro_categoria", required = false) List<Long> categoriasId,
                 @RequestParam(value = "filtro_genero", required = false) String genero,
-                @RequestParam(value = "filtro_tamanho", required = false) List<String> tamanhos
+                @RequestParam(value = "filtro_tamanho", required = false) List<String> tamanhos,
+                @RequestParam(value = "ativo", required = false) Boolean ativo
             ) {
 
-       Page<Roupa> roupas = roupaService.getFiltrados(pageable, descricao, coresId, categoriasId, genero, tamanhos);
+       Page<Roupa> roupas = roupaService.getFiltrados(pageable, descricao, coresId, categoriasId, genero, tamanhos, ativo);
 
        return ResponseEntity.ok().body(roupas);
     }

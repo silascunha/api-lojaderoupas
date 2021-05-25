@@ -25,12 +25,9 @@ public class Roupa implements Serializable {
     @Enumerated(EnumType.STRING)
     private Genero genero;
 
-    @ManyToMany
-    @JoinTable(
-            name = "roupa_categoria", joinColumns = @JoinColumn(name = "roupa_id"),
-            inverseJoinColumns = @JoinColumn(name = "categoria_id")
-    )
-    private Set<Categoria> categorias = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name = "categoria_id")
+    private Categoria categoria;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
     private Instant dataCadastro;
@@ -115,12 +112,12 @@ public class Roupa implements Serializable {
         this.genero = genero;
     }
 
-    public Set<Categoria> getCategorias() {
-        return categorias;
+    public Categoria getCategoria() {
+        return categoria;
     }
 
-    public void setCategorias(Set<Categoria> categorias) {
-        this.categorias = categorias;
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
     }
 
     public Integer getQuantidadeTotal() {
