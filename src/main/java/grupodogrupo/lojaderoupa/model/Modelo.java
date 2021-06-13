@@ -57,6 +57,7 @@ public class Modelo implements Serializable {
         tamanhosModelo.forEach(x -> {
             x.setModelo(this);
         });
+
         this.tamanhosModelo = tamanhosModelo;
     }
 
@@ -78,7 +79,6 @@ public class Modelo implements Serializable {
         this.cor = cor;
     }
 
-    @JsonIgnore
     public Integer getQuantidadeTotal() {
         Integer quantidadeTotal = 0;
 

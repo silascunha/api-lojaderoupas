@@ -14,9 +14,11 @@ public class Cor implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private String nome;
 
-    @Column(length = 12)
+    @Column(length = 12, nullable = false)
     private String valor;
 
     @OneToMany(mappedBy = "cor", fetch = FetchType.LAZY)
@@ -66,6 +68,10 @@ public class Cor implements Serializable {
 
     public void setModelos(Set<Modelo> modelos) {
         this.modelos = modelos;
+    }
+
+    public boolean getTemRegistros() {
+        return !this.modelos.isEmpty();
     }
 
     @Override

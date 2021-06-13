@@ -2,6 +2,7 @@ package grupodogrupo.lojaderoupa.model;
 
 import grupodogrupo.lojaderoupa.model.pk.ItemPedidoPK;
 
+import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import java.io.Serializable;
@@ -13,7 +14,9 @@ public class ItemPedido implements Serializable {
     @EmbeddedId
     private ItemPedidoPK id = new ItemPedidoPK();
 
+    @Column(nullable = false)
     private Integer quantidade;
+    @Column(nullable = false)
     private Double preco;
 
     public ItemPedido() {}

@@ -3,15 +3,13 @@ package grupodogrupo.lojaderoupa.controller;
 import grupodogrupo.lojaderoupa.model.ListaTamanho;
 import grupodogrupo.lojaderoupa.model.enums.TipoTamanho;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
 
 @RestController
+@CrossOrigin
 @RequestMapping(value = "/api/tamanhos")
 public class TamanhoController {
 
@@ -21,7 +19,7 @@ public class TamanhoController {
     }
 
     @GetMapping(value = "/{codigo}")
-    public ResponseEntity<List<String>> getTamanhosPorTipo(@PathVariable Integer codigo) {
+    public ResponseEntity<List<String>> getTamanhosPorTipo(@PathVariable String codigo) {
         TipoTamanho tipo = TipoTamanho.valueOf(codigo);
 
         return ResponseEntity.ok().body(ListaTamanho.getTamanhos(tipo));

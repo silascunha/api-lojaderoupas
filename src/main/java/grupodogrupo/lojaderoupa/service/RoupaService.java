@@ -144,6 +144,19 @@ public class RoupaService {
 
     }
 
+    public Roupa alternarAtivo(Long id) {
+        try {
+            Roupa obj = repository.getOne(id);
+
+            obj.setAtivo(!obj.getAtivo());
+
+            return repository.save(obj);
+        } catch (EntityNotFoundException e) {
+            e.printStackTrace();
+            throw new NotFoundException(id);
+        }
+    }
+
     public void saveImages(Long modeloId, List<MultipartFile> files) {
         Roupa obj = repository.findByModelosId(modeloId).orElseThrow(() -> new NotFoundException(modeloId));
         Modelo modelo = obj.getModelos().stream().filter(m -> m.getId().equals(modeloId)).findFirst().get();

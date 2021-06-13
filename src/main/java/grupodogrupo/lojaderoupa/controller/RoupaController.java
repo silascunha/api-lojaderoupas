@@ -111,6 +111,17 @@ public class RoupaController {
         return ResponseEntity.ok().body("Imagens enviadas");
     }
 
+    @PostMapping(value = "/alternarAtivo/{id}")
+    public ResponseEntity<Map<String, Object>> alternarAtivo(@PathVariable Long id) {
+        Roupa obj = roupaService.alternarAtivo(id);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", obj.getId());
+        map.put("ativo", obj.getAtivo());
+
+        return ResponseEntity.ok().body(map);
+    }
+
     @PostMapping(value = "/enviarLista")
     public ResponseEntity<List<CreatedResponseDTO>> insertLista(@RequestBody List<Roupa> roupas) throws MalformedURLException {
         List<CreatedResponseDTO> responseDTOList = new ArrayList<>();

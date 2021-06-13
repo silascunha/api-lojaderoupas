@@ -13,7 +13,10 @@ public class TamanhoModelo implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String tamanho;
+
+    @Column(nullable = false)
     private int quantidade;
 
     @ManyToOne(fetch = FetchType.LAZY)

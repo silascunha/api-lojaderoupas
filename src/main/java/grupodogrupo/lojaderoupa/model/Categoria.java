@@ -14,6 +14,8 @@ public class Categoria implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private String nome;
 
     @JsonIgnore
@@ -54,6 +56,10 @@ public class Categoria implements Serializable {
 
     public void setRoupas(Set<Roupa> roupas) {
         this.roupas = roupas;
+    }
+
+    public boolean getTemRegistros() {
+        return !this.roupas.isEmpty();
     }
 
     @Override

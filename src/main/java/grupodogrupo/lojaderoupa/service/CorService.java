@@ -64,5 +64,6 @@ public class CorService {
 
     private void updateData(Cor objAntigo, Cor objNovo) {
         objAntigo.setNome(objNovo.getNome());
+        objAntigo.setValor(objNovo.getValor());
     }
 }

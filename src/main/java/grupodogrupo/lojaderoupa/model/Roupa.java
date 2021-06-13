@@ -16,13 +16,20 @@ public class Roupa implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private String descricao;
+
+    @Column(nullable = false)
     private Double preco;
+
     private Boolean ativo = false;
 
+    @Column(nullable = false)
     private int tipoTamanho;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Genero genero;
 
     @ManyToOne
@@ -30,6 +37,7 @@ public class Roupa implements Serializable {
     private Categoria categoria;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
+    @Column(nullable = false)
     private Instant dataCadastro;
 
     @OneToMany(mappedBy = "roupa", cascade = CascadeType.ALL)
@@ -135,12 +143,14 @@ public class Roupa implements Serializable {
 
     public void setModelos(Set<Modelo> modelos) {
         modelos.forEach(x -> {
-            boolean temTamanhoInvalido = !ListaTamanho.getTamanhos(this.getTipoTamanho())
-                    .containsAll(x.getTamanhos());
+            List<String> listaTamanho = ListaTamanho.getTamanhos(this.getTipoTamanho());
+            boolean temTamanhoInvalido = !listaTamanho.containsAll(x.getTamanhos());
 
             if (temTamanhoInvalido) {
                 throw new IllegalArgumentException("Tamanho inválido com o tipo selecionado");
             }
+
+            x.getTamanhosModelo().sort(Comparator.comparingInt(tm -> listaTamanho.indexOf(tm.getTamanho())));
 
             x.setRoupa(this);
         });

@@ -17,8 +17,10 @@ public class Pedido implements Serializable {
     private Long id;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
+    @Column(nullable = false)
     private Instant dataPedido;
 
+    @Column(nullable = false)
     private Integer status;
 
     @OneToMany(mappedBy = "id.pedido")

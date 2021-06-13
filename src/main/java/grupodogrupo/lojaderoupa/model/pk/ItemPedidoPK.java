@@ -3,6 +3,7 @@ package grupodogrupo.lojaderoupa.model.pk;
 import grupodogrupo.lojaderoupa.model.Modelo;
 import grupodogrupo.lojaderoupa.model.Pedido;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
