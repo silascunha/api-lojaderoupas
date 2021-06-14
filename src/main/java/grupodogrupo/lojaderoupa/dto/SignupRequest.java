@@ -1,52 +1,29 @@
-package grupodogrupo.lojaderoupa.model;
+package grupodogrupo.lojaderoupa.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import grupodogrupo.lojaderoupa.model.Usuario;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.persistence.*;
+import javax.persistence.Column;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
-@Entity
-public class Usuario implements Serializable {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class SignupRequest implements Serializable {
 
     private String nome;
 
-    @Column(unique = true)
     private String email;
 
     private String senha;
 
-    @Column(unique = true)
     private String cpf;
 
     private String telefone;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dataNascimento;
 
     private String genero;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "cliente")
-    private List<Pedido> pedidos = new ArrayList<>();
-
-    public Usuario(){
-
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public SignupRequest() {
     }
 
     public String getNome() {
@@ -97,20 +74,24 @@ public class Usuario implements Serializable {
         this.dataNascimento = dataNascimento;
     }
 
-    @JsonIgnore
-    public List<Pedido> getPedidos() {
-        return pedidos;
-    }
-
-    public void setPedidos(List<Pedido> pedidos) {
-        this.pedidos = pedidos;
-    }
-
     public String getGenero() {
         return genero;
     }
 
     public void setGenero(String genero) {
         this.genero = genero;
+    }
+
+    public Usuario toUsuario(PasswordEncoder encoder) {
+        Usuario usuario = new Usuario();
+        usuario.setCpf(cpf);
+        usuario.setEmail(email);
+        usuario.setSenha(encoder.encode(senha));
+        usuario.setTelefone(telefone);
+        usuario.setDataNascimento(dataNascimento);
+        usuario.setNome(nome);
+        usuario.setGenero(genero);
+
+        return usuario;
     }
 }

@@ -18,11 +18,8 @@ import java.nio.file.Paths;
 @RequestMapping(value = "/api/teste")
 public class TesteController {
 
-    @GetMapping(value = "/arquivo", produces = {MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE})
-    public ResponseEntity<Resource> teste() throws MalformedURLException {
-        Path root = Paths.get("imagens");
-        Path file = root.resolve("5b41f9d2-f77c-47e0-be0b-7e4cb99bbbfb.png");
-        Resource resource = new UrlResource(file.toUri());
-        return ResponseEntity.ok().body(resource);
+    @GetMapping
+    public ResponseEntity<?> teste() {
+        return ResponseEntity.ok("Oi");
     }
 }

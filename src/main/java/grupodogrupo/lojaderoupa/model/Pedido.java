@@ -1,6 +1,7 @@
 package grupodogrupo.lojaderoupa.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -22,6 +23,10 @@ public class Pedido implements Serializable {
 
     @Column(nullable = false)
     private Integer status;
+
+    @ManyToOne
+    @JoinColumn(name = "cliente_id")
+    private Usuario cliente;
 
     @OneToMany(mappedBy = "id.pedido")
     private Set<ItemPedido> itens = new HashSet<>();
@@ -56,6 +61,15 @@ public class Pedido implements Serializable {
 
     public void setItens(Set<ItemPedido> itens) {
         this.itens = itens;
+    }
+
+    @JsonIgnore
+    public Usuario getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Usuario cliente) {
+        this.cliente = cliente;
     }
 
     @Override
