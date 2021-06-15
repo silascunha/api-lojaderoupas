@@ -2,7 +2,7 @@ package grupodogrupo.lojaderoupa.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import grupodogrupo.lojaderoupa.model.enums.Genero;
+import grupodogrupo.lojaderoupa.model.enums.GeneroRoupa;
 import grupodogrupo.lojaderoupa.model.enums.TipoTamanho;
 
 import javax.persistence.*;
@@ -30,7 +30,7 @@ public class Roupa implements Serializable {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Genero genero;
+    private GeneroRoupa genero;
 
     @ManyToOne
     @JoinColumn(name = "categoria_id")
@@ -112,11 +112,11 @@ public class Roupa implements Serializable {
         }
     }
 
-    public Genero getGenero() {
+    public GeneroRoupa getGenero() {
         return this.genero;
     }
 
-    public void setGenero(Genero genero) {
+    public void setGenero(GeneroRoupa genero) {
         this.genero = genero;
     }
 

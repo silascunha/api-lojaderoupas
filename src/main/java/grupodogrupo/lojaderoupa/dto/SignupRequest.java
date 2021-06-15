@@ -1,9 +1,9 @@
 package grupodogrupo.lojaderoupa.dto;
 
 import grupodogrupo.lojaderoupa.model.Usuario;
+import grupodogrupo.lojaderoupa.model.enums.Genero;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.persistence.Column;
 import java.io.Serializable;
 import java.time.LocalDate;
 
@@ -21,7 +21,7 @@ public class SignupRequest implements Serializable {
 
     private LocalDate dataNascimento;
 
-    private String genero;
+    private char genero;
 
     public SignupRequest() {
     }
@@ -74,12 +74,14 @@ public class SignupRequest implements Serializable {
         this.dataNascimento = dataNascimento;
     }
 
-    public String getGenero() {
+    public char getGenero() {
         return genero;
     }
 
-    public void setGenero(String genero) {
-        this.genero = genero;
+    public void setGenero(char genero) {
+        if (Genero.has(genero)) {
+            this.genero = genero;
+        }
     }
 
     public Usuario toUsuario(PasswordEncoder encoder) {
@@ -90,7 +92,7 @@ public class SignupRequest implements Serializable {
         usuario.setTelefone(telefone);
         usuario.setDataNascimento(dataNascimento);
         usuario.setNome(nome);
-        usuario.setGenero(genero);
+        usuario.setGenero(Genero.valueOf(genero));
 
         return usuario;
     }

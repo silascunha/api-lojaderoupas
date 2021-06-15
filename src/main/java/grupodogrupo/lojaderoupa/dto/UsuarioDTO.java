@@ -2,6 +2,7 @@ package grupodogrupo.lojaderoupa.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import grupodogrupo.lojaderoupa.model.Usuario;
+import grupodogrupo.lojaderoupa.model.enums.Genero;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -17,11 +18,14 @@ public class UsuarioDTO implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dataNascimento;
 
+    private Genero genero;
+
     public UsuarioDTO(Usuario usuario) {
         this.id = usuario.getId();
         this.email = usuario.getEmail();
         this.nome = usuario.getNome();
         this.dataNascimento = usuario.getDataNascimento();
+        this.genero = usuario.getGenero();
     }
 
     public Long getId() {
@@ -54,5 +58,9 @@ public class UsuarioDTO implements Serializable {
 
     public void setDataNascimento(LocalDate dataNascimento) {
         this.dataNascimento = dataNascimento;
+    }
+
+    public Genero getGenero() {
+        return genero;
     }
 }

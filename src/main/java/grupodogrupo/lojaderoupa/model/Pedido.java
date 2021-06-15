@@ -2,6 +2,7 @@ package grupodogrupo.lojaderoupa.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import grupodogrupo.lojaderoupa.model.enums.StatusPedido;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -22,7 +23,7 @@ public class Pedido implements Serializable {
     private Instant dataPedido;
 
     @Column(nullable = false)
-    private Integer status;
+    private int status;
 
     @ManyToOne
     @JoinColumn(name = "cliente_id")
@@ -30,6 +31,17 @@ public class Pedido implements Serializable {
 
     @OneToMany(mappedBy = "id.pedido")
     private Set<ItemPedido> itens = new HashSet<>();
+
+    @OneToOne(mappedBy = "pedido", cascade = CascadeType.ALL)
+    private Pagamento pagamento;
+
+
+    public Pedido() {
+    }
+
+    public Pedido(Long id) {
+        this.id = id;
+    }
 
     public Long getId() {
         return id;
@@ -47,12 +59,14 @@ public class Pedido implements Serializable {
         this.dataPedido = dataPedido;
     }
 
-    public Integer getStatus() {
-        return status;
+    public StatusPedido getStatus() {
+        return StatusPedido.valueOf(status);
     }
 
-    public void setStatus(Integer status) {
-        this.status = status;
+    public void setStatus(StatusPedido status) {
+        if (status != null) {
+            this.status = status.getCodigo();
+        }
     }
 
     public Set<ItemPedido> getItens() {
@@ -70,6 +84,23 @@ public class Pedido implements Serializable {
 
     public void setCliente(Usuario cliente) {
         this.cliente = cliente;
+    }
+
+    public Pagamento getPagamento() {
+        return pagamento;
+    }
+
+    public void setPagamento(Pagamento pagamento) {
+        pagamento.setPedido(this);
+        this.pagamento = pagamento;
+    }
+
+    public double getTotal() {
+        return itens.stream().mapToDouble(ItemPedido::getSubTotal).sum();
+    }
+
+    public Object getNomeCliente() {
+        return this.cliente.getNome();
     }
 
     @Override

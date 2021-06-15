@@ -24,7 +24,7 @@ public class UsuarioController {
     AuthenticationManager authenticationManager;
 
     @Autowired
-    UsuarioService userService;
+    UsuarioService usuarioService;
 
     @Autowired
     PasswordEncoder encoder;
@@ -35,7 +35,7 @@ public class UsuarioController {
     @GetMapping(value = "/me")
     public ResponseEntity<UsuarioDTO> getUserData() {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Usuario user = userService.getByEmail(userDetails.getUsername());
+        Usuario user = usuarioService.getByEmail(userDetails.getUsername());
 
         return ResponseEntity.ok().body(new UsuarioDTO(user));
     }

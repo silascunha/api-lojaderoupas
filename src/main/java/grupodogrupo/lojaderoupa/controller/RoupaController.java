@@ -3,7 +3,6 @@ package grupodogrupo.lojaderoupa.controller;
 import grupodogrupo.lojaderoupa.dto.CreatedResponseDTO;
 import grupodogrupo.lojaderoupa.model.Modelo;
 import grupodogrupo.lojaderoupa.model.Roupa;
-import grupodogrupo.lojaderoupa.model.enums.Genero;
 import grupodogrupo.lojaderoupa.service.RoupaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;

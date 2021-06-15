@@ -3,7 +3,7 @@ package grupodogrupo.lojaderoupa.service;
 import grupodogrupo.lojaderoupa.model.Imagem;
 import grupodogrupo.lojaderoupa.model.Modelo;
 import grupodogrupo.lojaderoupa.model.Roupa;
-import grupodogrupo.lojaderoupa.model.enums.Genero;
+import grupodogrupo.lojaderoupa.model.enums.GeneroRoupa;
 import grupodogrupo.lojaderoupa.repository.RoupaRepository;
 import grupodogrupo.lojaderoupa.service.exceptions.DatabaseException;
 import grupodogrupo.lojaderoupa.service.exceptions.NotFoundException;
@@ -76,7 +76,7 @@ public class RoupaService {
             roupas = repository.findByDescricao(descricao, ativo);
         }
         else {
-            Genero generoFiltro = (genero != null) ? Genero.valueOf(genero) : null;
+            GeneroRoupa generoFiltro = (genero != null) ? GeneroRoupa.valueOf(genero) : null;
             roupas = repository.buscarFiltrado(descricao, coresId, categoriasId, generoFiltro, tamanhos, ativo);
         }
 

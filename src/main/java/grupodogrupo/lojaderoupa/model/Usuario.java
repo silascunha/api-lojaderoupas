@@ -2,12 +2,14 @@ package grupodogrupo.lojaderoupa.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import grupodogrupo.lojaderoupa.model.enums.Genero;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class Usuario implements Serializable {
@@ -31,7 +33,7 @@ public class Usuario implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dataNascimento;
 
-    private String genero;
+    private char genero;
 
     @JsonIgnore
     @OneToMany(mappedBy = "cliente")
@@ -106,11 +108,26 @@ public class Usuario implements Serializable {
         this.pedidos = pedidos;
     }
 
-    public String getGenero() {
-        return genero;
+    public Genero getGenero() {
+        return Genero.valueOf(this.genero);
     }
 
-    public void setGenero(String genero) {
-        this.genero = genero;
+    public void setGenero(Genero genero) {
+        if (genero != null) {
+            this.genero = genero.getCodigo();
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Usuario usuario = (Usuario) o;
+        return Objects.equals(id, usuario.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

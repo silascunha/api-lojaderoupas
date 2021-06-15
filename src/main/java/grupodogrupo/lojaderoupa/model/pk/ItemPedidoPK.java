@@ -1,5 +1,6 @@
 package grupodogrupo.lojaderoupa.model.pk;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import grupodogrupo.lojaderoupa.model.Modelo;
 import grupodogrupo.lojaderoupa.model.Pedido;
 

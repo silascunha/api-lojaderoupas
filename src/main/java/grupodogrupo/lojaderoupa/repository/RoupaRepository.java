@@ -1,7 +1,7 @@
 package grupodogrupo.lojaderoupa.repository;
 
 import grupodogrupo.lojaderoupa.model.Roupa;
-import grupodogrupo.lojaderoupa.model.enums.Genero;
+import grupodogrupo.lojaderoupa.model.enums.GeneroRoupa;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -36,7 +36,7 @@ public interface RoupaRepository extends JpaRepository<Roupa, Long> {
     List<Roupa> buscarFiltrado(@Param("descricao") String descricao,
                                @Param("coresId") List<Long> coresId,
                                @Param("categoriasId") List<Long> categoriasId,
-                               @Param("genero") Genero genero,
+                               @Param("genero") GeneroRoupa genero,
                                @Param("tamanhos") List<String> tamanhos,
                                @Param("ativo") Boolean ativo);
 
