@@ -1,11 +1,11 @@
 package grupodogrupo.lojaderoupa.service;
 
 import grupodogrupo.lojaderoupa.dto.PedidoDTO;
-import grupodogrupo.lojaderoupa.model.ItemPedido;
-import grupodogrupo.lojaderoupa.model.Pedido;
-import grupodogrupo.lojaderoupa.model.Usuario;
+import grupodogrupo.lojaderoupa.model.*;
 import grupodogrupo.lojaderoupa.repository.ItemPedidoRepository;
 import grupodogrupo.lojaderoupa.repository.PedidoRepository;
+import grupodogrupo.lojaderoupa.repository.RoupaRepository;
+import grupodogrupo.lojaderoupa.repository.TamanhoModeloRepository;
 import grupodogrupo.lojaderoupa.service.exceptions.DatabaseException;
 import grupodogrupo.lojaderoupa.service.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.Instant;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class PedidoService {
@@ -27,6 +26,12 @@ public class PedidoService {
 
     @Autowired
     private ItemPedidoRepository itemRepository;
+
+    @Autowired
+    private RoupaRepository roupaRepository;
+
+    @Autowired
+    private TamanhoModeloRepository tamanhoModeloRepository;
 
     public List<Pedido> getAll() {
         List<Pedido> lista = pedidoRepository.findAll();
@@ -54,10 +59,17 @@ public class PedidoService {
 
         List<ItemPedido> itens = dto.getItens();
 
+        Set<TamanhoModelo> tamanhoModelos = new HashSet<>();
+
         for (ItemPedido ip : itens) {
             ip.setPedido(obj);
+
+            TamanhoModelo tamanhoModelo = tamanhoModeloRepository.findByTamanhoAndModeloId(ip.getTamanho(), ip.getModeloId()).get();
+            tamanhoModelo.setQuantidade(tamanhoModelo.getQuantidade() - ip.getQuantidade());
+            tamanhoModelos.add(tamanhoModelo);
         }
-        itemRepository.saveAll(itens);
+        itens = itemRepository.saveAll(itens);
+        tamanhoModeloRepository.saveAll(tamanhoModelos);
 
         return obj;
     }

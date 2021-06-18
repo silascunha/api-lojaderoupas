@@ -29,7 +29,7 @@ public class SecurityWebConfig extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .authorizeRequests()
-                .antMatchers("/api/usuario/**").authenticated()
+                .antMatchers("/api/usuarios/**").authenticated()
                 .antMatchers(HttpMethod.GET,"/**").permitAll()
                 .antMatchers("/api/auth/**").permitAll()
                 .antMatchers("/h2-console/**").permitAll()

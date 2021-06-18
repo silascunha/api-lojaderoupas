@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface RoupaRepository extends JpaRepository<Roupa, Long> {
 
@@ -23,6 +24,8 @@ public interface RoupaRepository extends JpaRepository<Roupa, Long> {
     List<Roupa> findByDescricao(@Param("descricao") String descricao, @Param("ativo") Boolean ativo);
 
     Optional<Roupa> findByModelosId(Long id);
+
+    Set<Roupa> findByModelosIdIn(List<Long> id);
 
     @Query("SELECT DISTINCT r FROM Roupa r " +
             "JOIN r.modelos rm JOIN rm.tamanhosModelo rmtm " +

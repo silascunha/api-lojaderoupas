@@ -39,7 +39,6 @@ public class ItemPedido implements Serializable {
     }
 
     public void setModelo(Modelo modelo) {
-        System.out.println(modelo.getId());
         id.setModelo(modelo);
     }
 
@@ -86,6 +85,16 @@ public class ItemPedido implements Serializable {
 
     public void setTamanho(String tamanho) {
         this.tamanho = tamanho;
+    }
+
+    @JsonIgnore
+    public Long getModeloId() {
+        return getModelo().getId();
+    }
+
+    @JsonIgnore
+    public Roupa getRoupa() {
+        return getModelo().getRoupa();
     }
 
     public Double getSubTotal() {
